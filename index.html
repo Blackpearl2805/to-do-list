@@ -669,7 +669,7 @@
                     // Sort tasks by creation date (newest first)
                     tasks.sort((a, b) => b.createdAt - a.createdAt);
                     
-                    console.log(Loaded ${tasks.length} tasks);
+                    console.log(`Loaded ${tasks.length} tasks`);
                     applyFilters();
                     updateStats();
                     loadingIndicator.style.display = 'none';
@@ -717,7 +717,7 @@
             try {
                 if (editingTaskId) {
                     // Update existing task
-                    const taskRef = ref(db, tasks/${editingTaskId});
+                    const taskRef = ref(db, `tasks/${editingTaskId}`);
                     await update(taskRef, {
                         ...taskData,
                         updatedAt: new Date().toISOString()
@@ -747,7 +747,7 @@
         async function toggleTaskCompletion(taskId, currentStatus) {
             try {
                 const newStatus = !currentStatus;
-                const taskRef = ref(db, tasks/${taskId});
+                const taskRef = ref(db, `tasks/${taskId}`);
                 await update(taskRef, { 
                     completed: newStatus,
                     completedAt: newStatus ? new Date().toISOString() : null
@@ -764,7 +764,7 @@
             if (!confirm('Are you sure you want to delete this task?')) return;
             
             try {
-                const taskRef = ref(db, tasks/${taskId});
+                const taskRef = ref(db, `tasks/${taskId}`);
                 await remove(taskRef);
                 showSuccess('Task deleted successfully!');
             } catch (error) {
@@ -830,7 +830,7 @@
             
             // Update active filter button
             filterButtons.forEach(btn => btn.classList.remove('active'));
-            document.querySelector([data-filter="${filter}"]).classList.add('active');
+            document.querySelector(`[data-filter="${filter}"]`).classList.add('active');
             
             applyFilters();
         }
@@ -844,7 +844,7 @@
                 
                 // Apply search filter
                 if (searchQuery) {
-                    const searchableText = ${task.title} ${task.description} ${task.category}.toLowerCase();
+                    const searchableText = `${task.title} ${task.description} ${task.category}`.toLowerCase();
                     if (!searchableText.includes(searchQuery)) return false;
                 }
                 
@@ -885,11 +885,11 @@
                         </button>
                     </div>
                     
-                    ${task.description ? <div class="task-description">${escapeHtml(task.description)}</div> : ''}
+                    ${task.description ? `<div class="task-description">${escapeHtml(task.description)}</div>` : ''}
                     
                     <div class="task-meta">
                         <div class="task-deadline ${isOverdue ? 'overdue' : ''}">
-                            ${deadlineText ? <i class="fas fa-calendar"></i> ${deadlineText} : ''}
+                            ${deadlineText ? `<i class="fas fa-calendar"></i> ${deadlineText}` : ''}
                         </div>
                         <div class="task-actions">
                             <button class="btn btn-small ${task.completed ? 'btn-danger' : 'btn-success'}" 
@@ -927,7 +927,7 @@
                 <div class="empty-state">
                     <i class="${icons[currentFilter] || icons.all}"></i>
                     <h3>${messages[currentFilter] || messages.all}</h3>
-                    ${searchQuery ? <p>Try adjusting your search: "${searchQuery}"</p> : ''}
+                    ${searchQuery ? `<p>Try adjusting your search: "${searchQuery}"</p>` : ''}
                 </div>
             `;
         }
@@ -973,13 +973,13 @@
             const days = Math.ceil(diff / (1000 * 60 * 60 * 24));
             
             if (days < 0) {
-                return Overdue by ${Math.abs(days)} day${Math.abs(days) !== 1 ? 's' : ''};
+                return `Overdue by ${Math.abs(days)} day${Math.abs(days) !== 1 ? 's' : ''}`;
             } else if (days === 0) {
                 return 'Due today';
             } else if (days === 1) {
                 return 'Due tomorrow';
             } else if (days <= 7) {
-                return Due in ${days} days;
+                return `Due in ${days} days`;
             } else {
                 return deadline.toLocaleDateString();
             }
@@ -999,7 +999,7 @@
             if (existing) existing.remove();
 
             const notification = document.createElement('div');
-            notification.className = notification ${type};
+            notification.className = `notification ${type}`;
             notification.style.cssText = `
                 position: fixed;
                 top: 20px;
